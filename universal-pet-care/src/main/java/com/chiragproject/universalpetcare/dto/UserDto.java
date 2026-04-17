@@ -1,10 +1,11 @@
-package com.chiragproject.universalpetcare.request;
+package com.chiragproject.universalpetcare.dto;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Transient;
 import lombok.Data;
 
 @Data
-public class RegistrationRequest {
+public class UserDto {
     private Long id;
     private String firstname;
     private String lastname;

@@ -4,15 +4,10 @@ import jakarta.persistence.Column;
 import lombok.Data;
 
 @Data
-public class RegistrationRequest {
-    private Long id;
+public class UserUpdateRequest {
     private String firstname;
     private String lastname;
     private String gender;
     private String phoneNumber;
-    private String email;
-    private String password;
-    private String userType;
-    private boolean isEnable;
     private String specialization;
 }
