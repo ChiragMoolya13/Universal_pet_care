@@ -17,7 +17,6 @@ public class PatientFactory {
     public Patient createPatient(RegistrationRequest request) {
         Patient patient = new Patient();
         userAttributesMapper.setCommonAttributes(request,patient);
-        patient.setSpecialization(request.getSpecialization());
         return patientRepository.save(patient);
     }
 }

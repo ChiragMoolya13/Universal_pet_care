@@ -17,7 +17,6 @@ public class AdminFactory {
     public Admin createAdmin(RegistrationRequest request) {
         Admin admin = new Admin();
         userAttributesMapper.setCommonAttributes(request,admin);
-        admin.setSpecialization(request.getSpecialization());
         return adminRepository.save(admin);
     }
 }

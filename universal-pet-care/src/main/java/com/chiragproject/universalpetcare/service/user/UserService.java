@@ -9,6 +9,7 @@ import com.chiragproject.universalpetcare.model.User;
 import com.chiragproject.universalpetcare.repository.UserRepository;
 import com.chiragproject.universalpetcare.request.RegistrationRequest;
 import com.chiragproject.universalpetcare.request.UserUpdateRequest;
+import com.chiragproject.universalpetcare.utils.FeedBackMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -32,8 +33,8 @@ public class UserService implements IUserService{
     @Override
     public User update(Long userId, UserUpdateRequest request){
         User user = findById(userId);
-        user.setFirstname(request.getFirstname());
-        user.setLastname(request.getLastname());
+        user.setFirstName(request.getFirstName());
+        user.setLastName(request.getLastName());
         user.setGender(request.getGender());
         user.setPhoneNumber(request.getPhoneNumber());
         user.setSpecialization(request.getSpecialization());
@@ -43,12 +44,12 @@ public class UserService implements IUserService{
     @Override
     public User findById(Long userId) {
         return userRepository.findById(userId)
-                .orElseThrow(()-> new ResourceNotFoundException("User not found"));
+                .orElseThrow(()-> new ResourceNotFoundException(FeedBackMessage.NOT_FOUND));
     }
     @Override
     public void delete(Long userId){
         userRepository.findById(userId).ifPresentOrElse(userRepository :: delete,()->{
-            throw new ResourceNotFoundException("User not found");
+            throw new ResourceNotFoundException(FeedBackMessage.NOT_FOUND);
         });
     }
 

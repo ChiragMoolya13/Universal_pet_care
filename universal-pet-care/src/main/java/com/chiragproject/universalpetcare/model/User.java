@@ -5,6 +5,11 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.time.LocalDate;
+import java.util.Calendar;
+import java.util.List;
 
 @Getter
 @Setter
@@ -15,8 +20,8 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String firstname;
-    private String lastname;
+    private String firstName;
+    private String lastName;
     private String gender;
     @Column(name = "mobile")
     private String phoneNumber;
@@ -24,6 +29,13 @@ public class User {
     private String password;
     private String userType;
     private boolean isEnable;
+
+    @CreationTimestamp
+    private LocalDate createdAt;
+
     @Transient
     private String specialization;
+
+    @Transient
+    List<Appointment> appointments;
 }

@@ -7,8 +7,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class UserAttributesMapper {
     public void setCommonAttributes(RegistrationRequest source, User target){
-        target.setFirstname(source.getFirstname());
-        target.setLastname(source.getLastname());
+        target.setFirstName(source.getFirstName());
+        target.setLastName(source.getLastName());
         target.setGender(source.getGender());
         target.setPhoneNumber(source.getPhoneNumber());
         target.setEmail(source.getEmail());
