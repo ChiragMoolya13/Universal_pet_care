@@ -34,7 +34,7 @@ public class PhotoController {
     }
 }
     @PutMapping(UrlMapping.UPDATE_PHOTO)
-    public ResponseEntity<ApiResponse> updatePhoto(@PathVariable Long photoId,@RequestBody MultipartFile file) throws SQLException{
+    public ResponseEntity<ApiResponse> updatePhoto(@PathVariable Long photoId,@RequestParam("file") MultipartFile file) throws SQLException{
         try {
             Photo photo = photoService.getPhotoById(photoId);
             if (photo != null) {

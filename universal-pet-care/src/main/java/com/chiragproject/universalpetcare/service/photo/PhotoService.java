@@ -77,8 +77,8 @@ public class PhotoService implements IPhotoService{
         Photo photo = getPhotoById(id);
         if (photo != null){
             Blob photoBlob = photo.getImage();
-            int blobLength = (int) photoBlob.length();
-            return new byte[blobLength];
+//            int blobLength = (int) photoBlob.length();
+            return photoBlob.getBytes(1, (int) photoBlob.length());
         }
         return null;
     }
