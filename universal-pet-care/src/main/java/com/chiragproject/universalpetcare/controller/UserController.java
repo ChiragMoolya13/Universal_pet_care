@@ -3,7 +3,7 @@ package com.chiragproject.universalpetcare.controller;
 import com.chiragproject.universalpetcare.dto.EntityConverter;
 import com.chiragproject.universalpetcare.dto.UserDto;
 import com.chiragproject.universalpetcare.exception.ResourceNotFoundException;
-import com.chiragproject.universalpetcare.exception.UserAlreadyExistsException;
+import com.chiragproject.universalpetcare.exception.AlreadyExistsException;
 import com.chiragproject.universalpetcare.model.User;
 import com.chiragproject.universalpetcare.request.RegistrationRequest;
 import com.chiragproject.universalpetcare.request.UserUpdateRequest;
@@ -32,7 +32,7 @@ public class UserController {
             UserDto registeredUser = entityConverter.mapEntityToDto(theUser, UserDto.class);
             return ResponseEntity.ok(new ApiResponse(FeedBackMessage.CREATE_SUCCESS, registeredUser));
         }
-        catch (UserAlreadyExistsException e){
+        catch (AlreadyExistsException e){
             return ResponseEntity.status(CONFLICT).body(new ApiResponse(e.getMessage(), null));
         }
         catch (Exception e){

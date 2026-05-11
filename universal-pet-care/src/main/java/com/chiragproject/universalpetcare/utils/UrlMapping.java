@@ -34,4 +34,9 @@ public class UrlMapping {
     public static final String DELETE_PHOTO = "/photo/{photoId}/user/{userId}/delete";
     public static final String GET_PHOTO_BY_ID = "/photo/{photoId}/photo";
     /*==================End Photo API=============================*/
+
+    /*==================Start Review API=============================*/
+    public static final String REVIEWS = API+"/reviews";
+    public static final String SUBMIT_REVIEW = "/submit-review";
+    /*==================End Review API=============================*/
 }

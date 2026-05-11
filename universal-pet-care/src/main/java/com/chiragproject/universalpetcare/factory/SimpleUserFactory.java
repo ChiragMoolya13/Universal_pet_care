@@ -1,6 +1,6 @@
 package com.chiragproject.universalpetcare.factory;
 
-import com.chiragproject.universalpetcare.exception.UserAlreadyExistsException;
+import com.chiragproject.universalpetcare.exception.AlreadyExistsException;
 import com.chiragproject.universalpetcare.model.User;
 import com.chiragproject.universalpetcare.repository.UserRepository;
 import com.chiragproject.universalpetcare.request.RegistrationRequest;
@@ -20,7 +20,7 @@ public class SimpleUserFactory implements UserFactory{
     @Override
     public User createUser(RegistrationRequest registrationRequest) {
         if(userRepository.existsByEmail(registrationRequest.getEmail())){
-            throw new UserAlreadyExistsException("Oops!"+registrationRequest.getEmail()+" already exists!");
+            throw new AlreadyExistsException("Oops!"+registrationRequest.getEmail()+" already exists!");
         }
         switch(registrationRequest.getUserType()){
             case "VET" -> {return veterinarianFactory.createVeterinarian(registrationRequest);
