@@ -44,12 +44,12 @@ public class UserService implements IUserService{
     @Override
     public User findById(Long userId) {
         return userRepository.findById(userId)
-                .orElseThrow(()-> new ResourceNotFoundException(FeedBackMessage.NOT_FOUND));
+                .orElseThrow(()-> new ResourceNotFoundException(FeedBackMessage.RESOURCE_NOT_FOUND));
     }
     @Override
     public void delete(Long userId){
         userRepository.findById(userId).ifPresentOrElse(userRepository :: delete,()->{
-            throw new ResourceNotFoundException(FeedBackMessage.NOT_FOUND);
+            throw new ResourceNotFoundException(FeedBackMessage.RESOURCE_NOT_FOUND);
         });
     }
 

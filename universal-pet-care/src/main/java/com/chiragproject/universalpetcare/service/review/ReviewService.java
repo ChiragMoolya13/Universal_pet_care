@@ -8,6 +8,7 @@ import com.chiragproject.universalpetcare.model.User;
 import com.chiragproject.universalpetcare.repository.AppointmentRepository;
 import com.chiragproject.universalpetcare.repository.ReviewRepository;
 import com.chiragproject.universalpetcare.repository.UserRepository;
+import com.chiragproject.universalpetcare.request.ReviewUpdateRequest;
 import com.chiragproject.universalpetcare.utils.FeedBackMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -29,18 +30,18 @@ public class ReviewService implements IReviewService{
     public Review saveReview(Review review, Long reviewerId, Long veterinarianId) {
         // 1.  Check if the reviewer is same as the doctor being reviewed.
         if(veterinarianId.equals(reviewerId)){
-            throw new IllegalArgumentException("Veterinarian can not review themselves");
+            throw new IllegalArgumentException(FeedBackMessage.CANNOT_REVIEW);
         }
         // 2. Check if  the reviewer has previously submitted a review for this doctor.
         Optional<Review> existingReview = reviewRepository.findByVeterinarianIdAndPatientId(veterinarianId, reviewerId);
         if(existingReview.isPresent()){
-            throw new AlreadyExistsException("You have already rated this  veterinarian, you may edit your previous review");
+            throw new AlreadyExistsException(FeedBackMessage.ALREADY_REVIEWED);
         }
         // 3. Check if the reviewer has gotten a completed appointment with this doctor.
-        boolean hadCompletedAppointments = appointmentRepository.existsByVeterinarianIdAndPatientIdAndStatus(veterinarianId,reviewerId, AppointmentStatus.COMPLETED);
-        if(!hadCompletedAppointments){
-            throw new IllegalStateException(FeedBackMessage.NOT_ALLOWED);
-        }
+//        boolean hadCompletedAppointments = appointmentRepository.existsByVeterinarianIdAndPatientIdAndStatus(veterinarianId,reviewerId, AppointmentStatus.COMPLETED);
+//        if(!hadCompletedAppointments){
+//            throw new IllegalStateException(FeedBackMessage.NOT_ALLOWED);
+//        }
         // 4. Get the veterinarian from the database
         User veterinarian = userRepository.findById(veterinarianId).orElseThrow(()->new ResourceNotFoundException(FeedBackMessage.VET_OR_PATIENT_NOT_FOUND));
         // 5. Get the reviewer (patient) from the database
@@ -63,15 +64,13 @@ public class ReviewService implements IReviewService{
     }
 
     @Override
-    public void updateReview(Long reviewerId, Review review) {
-        reviewRepository.findById(reviewerId)
-                .ifPresentOrElse(existingReview -> {
+    public Review updateReview(Long reviewerId, ReviewUpdateRequest review) {
+        return reviewRepository.findById(reviewerId)
+                .map(existingReview -> {
                 existingReview.setStars(review.getStars());
                 existingReview.setFeedback(review.getFeedback());
-                reviewRepository.save(existingReview);
-                }, () -> {
-                    throw new ResourceNotFoundException(FeedBackMessage.RESOURCE_FOUND);
-                });
+                return reviewRepository.save(existingReview);
+                }).orElseThrow(()-> new ResourceNotFoundException(FeedBackMessage.RESOURCE_NOT_FOUND));
 
     }
 
@@ -87,4 +86,13 @@ public class ReviewService implements IReviewService{
     //1. Get the review from the database
     //2. check and remove all relationships between the review and other users (patient and veterinarian)
     //3. delete the review
+
+    @Override
+    public void deleteReview(Long reviewerId){
+        reviewRepository.findById(reviewerId)
+                .ifPresentOrElse(Review::removeRelationShip,()->{
+                    throw new ResourceNotFoundException(FeedBackMessage.RESOURCE_NOT_FOUND);
+                });
+        reviewRepository.deleteById(reviewerId);
+    }
 }
