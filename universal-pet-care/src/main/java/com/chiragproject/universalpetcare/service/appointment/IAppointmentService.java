@@ -1,5 +1,6 @@
 package com.chiragproject.universalpetcare.service.appointment;
 
+import com.chiragproject.universalpetcare.dto.AppointmentDto;
 import com.chiragproject.universalpetcare.model.Appointment;
 import com.chiragproject.universalpetcare.request.AppointmentUpdateRequest;
 import com.chiragproject.universalpetcare.request.BookAppointmentRequest;
@@ -15,4 +16,5 @@ public interface IAppointmentService {
     Appointment getAppointmentById(Long id);
     Appointment getAppointmentByNo(String appointmentNo);
 
+    List<AppointmentDto> getUserAppointments(Long userId);
 }

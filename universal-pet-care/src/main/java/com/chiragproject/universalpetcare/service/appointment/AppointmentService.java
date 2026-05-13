@@ -1,18 +1,21 @@
 package com.chiragproject.universalpetcare.service.appointment;
 
+import com.chiragproject.universalpetcare.dto.AppointmentDto;
+import com.chiragproject.universalpetcare.dto.EntityConverter;
+import com.chiragproject.universalpetcare.dto.PetDto;
 import com.chiragproject.universalpetcare.enums.AppointmentStatus;
 import com.chiragproject.universalpetcare.exception.ResourceNotFoundException;
 import com.chiragproject.universalpetcare.model.Appointment;
 import com.chiragproject.universalpetcare.model.Pet;
 import com.chiragproject.universalpetcare.model.User;
 import com.chiragproject.universalpetcare.repository.AppointmentRepository;
-import com.chiragproject.universalpetcare.repository.PetRepository;
 import com.chiragproject.universalpetcare.repository.UserRepository;
 import com.chiragproject.universalpetcare.request.AppointmentUpdateRequest;
 import com.chiragproject.universalpetcare.request.BookAppointmentRequest;
 import com.chiragproject.universalpetcare.service.pet.IPetService;
 import com.chiragproject.universalpetcare.utils.FeedBackMessage;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,6 +31,10 @@ public class AppointmentService implements IAppointmentService{
     private final AppointmentRepository appointmentRepository;
     private final UserRepository userRepository;
     private final IPetService petService;
+    private final EntityConverter<Appointment, AppointmentDto> entityConverter;
+    private final EntityConverter<Pet, PetDto> petEntityConverter;
+    private final ModelMapper modelMapper;
+
 
 
     @Transactional
@@ -86,5 +93,19 @@ public class AppointmentService implements IAppointmentService{
     @Override
     public Appointment getAppointmentByNo(String appointmentNo) {
         return appointmentRepository.findByAppointmentNo(appointmentNo);
+    }
+
+    @Override
+    public List<AppointmentDto> getUserAppointments(Long userId){
+        List<Appointment> appointments = appointmentRepository.findAllByUserId(userId);
+        return appointments.stream()
+                .map(appointment -> {
+            AppointmentDto appointmentDto = entityConverter.mapEntityToDto(appointment, AppointmentDto.class);
+            List<PetDto> petDto = appointment.getPets()
+                    .stream()
+                    .map(pet->petEntityConverter.mapEntityToDto(pet,PetDto.class)).toList();
+            appointmentDto.setPets((petDto));
+            return appointmentDto;
+        }).toList();
     }
 }
