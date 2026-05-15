@@ -57,9 +57,8 @@ public class UserController {
     @GetMapping(UrlMapping.GET_USER_BY_ID)
     public ResponseEntity<ApiResponse> findById(@PathVariable Long userId){
         try{
-            User user = userService.findById(userId);
-            UserDto theUser = entityConverter.mapEntityToDto(user, UserDto.class);
-            return ResponseEntity.status(FOUND).body(new ApiResponse(FeedBackMessage.RESOURCE_FOUND, theUser));
+            UserDto userDTo = userService.getUserWithDetails(userId);
+            return ResponseEntity.status(FOUND).body(new ApiResponse(FeedBackMessage.RESOURCE_FOUND, userDTo));
         }
         catch(ResourceNotFoundException e){
             return ResponseEntity.status(NOT_FOUND).body(new ApiResponse(e.getMessage(),null));
